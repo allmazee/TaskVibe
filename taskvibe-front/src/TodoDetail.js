@@ -2,52 +2,49 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from './utils/api';
 import { format } from 'date-fns';
-import { removeToken } from './utils/auth';
 
 function TodoDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [todo, setTodo] = useState({ title: '', description: '', createdAt: '' });
-  const [isLoading, setIsLoading] = useState(true);
+  const [todo, setTodo] = useState(null);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const [error, setError] = useState(null);
 
   useEffect(() => {
     api.get(`/todos/${id}`)
       .then(response => {
-        console.log('Fetched todo:', response.data); // Логирование ответа
+        console.log('Fetched todo:', response.data);
         setTodo(response.data);
-        setIsLoading(false);
+        setTitle(response.data.title || '');
+        setDescription(response.data.description || '');
       })
       .catch(error => {
         console.error('Error fetching todo:', error.response || error);
+        setError('Failed to load task');
         if (error.response?.status === 401) {
-          removeToken();
           navigate('/signin');
-        } else {
-          setError('Failed to load task');
-          setIsLoading(false);
         }
       });
   }, [id, navigate]);
 
   const handleSave = () => {
-    api.put(`/todos/${id}`, { title: todo.title, description: todo.description })
+    console.log('Attempting to update todo:', { id, title, description });
+    api.put(`/todos/${id}`, { title, description })
       .then(response => {
-        console.log('Updated todo:', response.data); // Логирование обновления
+        console.log('Updated todo:', response.data);
         navigate('/');
       })
       .catch(error => {
         console.error('Error updating todo:', error.response || error);
+        setError('Failed to update task');
         if (error.response?.status === 401) {
-          removeToken();
           navigate('/signin');
-        } else {
-          setError('Failed to update task');
         }
       });
   };
 
-  if (isLoading) {
+  if (!todo && !error) {
     return <div>Loading...</div>;
   }
 
@@ -57,24 +54,25 @@ function TodoDetail() {
 
   return (
     <div className="container">
-      <h1>Task Details</h1>
+      <h1>Edit Task</h1>
       <div className="form">
         <input
           type="text"
-          value={todo.title || ''}
-          onChange={(e) => setTodo({ ...todo, title: e.target.value })}
           placeholder="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
         <textarea
-          value={todo.description || ''}
-          onChange={(e) => setTodo({ ...todo, description: e.target.value })}
           placeholder="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
         ></textarea>
         <div className="created-at">
           Created: {todo.createdAt ? format(new Date(todo.createdAt), 'dd MMM yyyy, HH:mm') : 'N/A'}
         </div>
+        {error && <div className="error-message">{error}</div>}
         <button onClick={handleSave}>Save</button>
-        <button onClick={() => navigate('/')}>Back to Tasks</button>
+        <button onClick={() => navigate('/')}>Back</button>
       </div>
     </div>
   );

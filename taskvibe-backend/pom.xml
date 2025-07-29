@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.allmazee</groupId>
-	<artifactId>taskvibe</artifactId>
+	<artifactId>taskvibe-backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>taskvibe</name>
-	<description>Demo project for Spring Boot</description>
+	<name>taskvibe-backend</name>
+	<description>Backend for TaskVibe, a RESTful task management application</description>
 	<url/>
 	<licenses>
 		<license/>

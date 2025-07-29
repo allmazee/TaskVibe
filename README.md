@@ -2,6 +2,8 @@
 
 TaskVibe is a A RESTful task management app with JWT-based authentication, powered by Spring Boot, PostgreSQL, and React. It allows users to register, log in, create, edit, delete, and sort tasks with a clean and intuitive interface.
 
+![image-1](D:\Study\Backend\portfolio\taskvibe\misc\images\image-1.png "app screenshot")
+
 ## Features
 
 - **Authentication and Authorization**:
