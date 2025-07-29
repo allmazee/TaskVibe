@@ -68,7 +68,7 @@ TaskVibe is a A RESTful task management app with JWT-based authentication, power
 2. **Set up the backend**:
    
    ```bash
-   cd taskvibe
+   cd taskvibe-backend
    ```
    
    - Configure PostgreSQL:
